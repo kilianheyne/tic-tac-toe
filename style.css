@@ -1,0 +1,23 @@
+#game-container table {
+    border-collapse: collapse;
+    margin: 20px auto;
+}
+
+#game-container td {
+    width: 100px;
+    height: 100px;
+    border: 2px solid #444;
+    text-align: center;
+    vertical-align: middle;
+    font-size: 2.5rem;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+#game-container td:hover {
+    background-color: #f0f0f0;
+}
+
+#game-container td:active {
+    background-color: #e0e0e0;
+}
