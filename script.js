@@ -1,4 +1,15 @@
-const board = [null, null, null, null, null, null, null, null, null];
+let board = [null, null, null, null, null, null, null, null, null];
+
+const winningCombinations = [
+    [0, 1, 2], // erste Reihe
+    [3, 4, 5], // zweite Reihe
+    [6, 7, 8], // dritte Reihe
+    [0, 3, 6], // erste Spalte
+    [1, 4, 7], // zweite Spalte
+    [2, 5, 8], // dritte Spalte
+    [0, 4, 8], // Diagonale \
+    [2, 4, 6], // Diagonale /
+];
 
 // Achtung - dieses Projekt ist in starker Zusammenarbeit mit ChatGPT entstanden. :)
 // Als Test für Prompt Engineering
@@ -16,7 +27,7 @@ function render() {
         for (let col = 0; col < 3; col++) {
             const index = row * 3 + col;
             const cellValue = board[index];
-            html += `<td onclick="handleClick(${index})">${
+            html += `<td id="cell-${index}" data-index="${index}" onclick="handleClick(${index})">${
                 cellValue !== null ? cellValue : ""
             }</td>`;
         }
@@ -41,6 +52,8 @@ function handleClick(index) {
 
     // Spieler wechseln
     currentPlayer = currentPlayer === "o" ? "x" : "o";
+
+    checkGameStatus(); // <-- Spielstand prüfen
 }
 
 
@@ -61,7 +74,6 @@ function generateCircleSVG() {
         </svg>
     `;
 }
-
 function generateCrossSVG() {
     return `
         <svg width="70" height="70" viewBox="0 0 100 100">
@@ -87,3 +99,23 @@ function generateCrossSVG() {
     `;
 }
 
+function checkGameStatus() {
+    for (const combo of winningCombinations) {
+        const [a, b, c] = combo;
+        if (board[a] && board[a] === board[b] && board[a] === board[c]) {
+            alert(`${board[a].toUpperCase()} hat gewonnen! 🎉`);
+            resetGame();
+            return;
+        }
+    }
+    if (!board.includes(null)) {
+        alert("Unentschieden! 😅");
+        resetGame();
+    }
+}
+
+function resetGame() {
+    board = Array(9).fill(null);
+    currentPlayer = "o";
+    render();
+}
