@@ -103,19 +103,52 @@ function checkGameStatus() {
     for (const combo of winningCombinations) {
         const [a, b, c] = combo;
         if (board[a] && board[a] === board[b] && board[a] === board[c]) {
-            alert(`${board[a].toUpperCase()} hat gewonnen! 🎉`);
-            resetGame();
+            // Gewinner anzeigen
+            document.getElementById("game-status").innerText = `${board[a].toUpperCase()} hat gewonnen! 🎉`;
+            document.getElementById("restart-button").style.display = "block";
+
+            // Linienpositionen berechnen
+            const positions = [
+                { x: 16, y: 16 }, { x: 50, y: 16 }, { x: 84, y: 16 },
+                { x: 16, y: 50 }, { x: 50, y: 50 }, { x: 84, y: 50 },
+                { x: 16, y: 84 }, { x: 50, y: 84 }, { x: 84, y: 84 },
+            ];
+
+            drawWinningLine(positions[a], positions[c]);
             return;
         }
     }
+
     if (!board.includes(null)) {
-        alert("Unentschieden! 😅");
-        resetGame();
+        document.getElementById("game-status").innerText = "Unentschieden! 😅";
+        document.getElementById("restart-button").style.display = "block";
     }
 }
-
 function resetGame() {
     board = Array(9).fill(null);
     currentPlayer = "o";
+    document.getElementById("game-status").innerText = "";
+    document.getElementById("restart-button").style.display = "none";
+    
+    const winningLine = document.querySelector(".winning-line");
+    if (winningLine) {
+        winningLine.remove();
+    }
+
     render();
+}
+
+function drawWinningLine(start, end) {
+    const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+
+    svg.classList.add("winning-line-svg");
+
+    line.setAttribute("x1", start.x + "%");
+    line.setAttribute("y1", start.y + "%");
+    line.setAttribute("x2", end.x + "%");
+    line.setAttribute("y2", end.y + "%");
+
+    svg.appendChild(line);
+    document.getElementById("game-container").appendChild(svg);
 }
